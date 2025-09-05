@@ -50,6 +50,7 @@ import { SpinnerComponent } from './spinner/spinner.component';
 import { FooterComponent } from './footer/footer.component';
 import { AuthService } from './auth.service';
 import { MyprofileComponent } from './user/myprofile.component';
+import { PageNotFoundComponent } from './page-not-found.component';
 
 
 export function myHttpLoader(http: HttpClient) {
@@ -74,7 +75,7 @@ export function myHttpLoader(http: HttpClient) {
     MessageListComponent,
     UserComponent,
     UserListComponent,
-
+    PageNotFoundComponent,
     RoleComponent,
     RoleListComponent,
     CourseComponent,
