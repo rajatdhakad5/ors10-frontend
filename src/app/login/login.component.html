@@ -1,0 +1,75 @@
+<app-navbar #one></app-navbar>
+<div class="d-flex justify-content-center align-items-center bg-img">
+  <div class="col-sm-12 col-md-6 col-lg-4">
+    <div class="card input-group-addon grad">
+      <div class="card-body">
+
+        <form>
+          <div class="text-center">
+            <h1 class="text-primary font-weight-bold">{{ 'Login' | translate }}</h1>
+          </div>
+          <input type="hidden" name="loginUrl" [(ngModel)]="form.loginUrl" class="form-control">
+
+          <!-- Error / Success Messages -->
+          <div *ngIf="form.error && form.message == 'Invalid ID or Password'"
+            class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ 'Invalid ID or Password' | translate }}
+          </div>
+
+          <div *ngIf="form.error==false && form.message == 'Logout Successfully'"
+            class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ 'Log out successfully' | translate }}
+          </div>
+
+          <div *ngIf="form.error && form.message == 'Your Session has been Expired! Please Re-Login'"
+            class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ 'Session Expired, Please Login Again' | translate }}
+          </div>
+
+          <!-- Email Field -->
+          <div class="pt-3">
+            <span><b>{{ 'Email Id' | translate }}</b> <span class="required-field"></span></span>
+            <div class="col-sm-12">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text"><i class="fa fa-envelope grey-text"></i></div>
+                </div>
+                <input type="text" name="loginId" [(ngModel)]="form.loginId" class="form-control"
+                  placeholder="{{ 'Enter Login Id' | translate }}">
+              </div>
+            </div>
+            <span *ngIf="inputerror.loginId != null" class="alertRedColor">{{ 'loginId'| translate }}</span>
+          </div>
+
+          <!-- Password Field -->
+          <div class="pt-3">
+            <span><b>{{ 'Password' | translate }}</b> <span class="required-field"></span></span>
+            <div class="col-sm-12">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text"><i class="fa fa-key grey-text"></i></div>
+                </div>
+                <input type="password" name="pwd" [(ngModel)]="form.password" class="form-control"
+                  placeholder="{{ 'Enter Password' | translate }}">
+              </div>
+            </div>
+            <span *ngIf="inputerror.password != null" class="alertRedColor">{{ 'password'| translate }}</span>
+          </div>
+
+          <!-- Buttons -->
+          <div class="row pt-4 pb-2 text-center">
+            <div class="col-12 d-flex justify-content-center">
+              <button (click)="signIn()" class="btn btn-success btn-space">{{ 'Sign in' | translate }}</button>
+              <a class="btn btn-warning" [routerLink]="['/forgotpassword']">{{ 'Forgot Password' | translate }}</a>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

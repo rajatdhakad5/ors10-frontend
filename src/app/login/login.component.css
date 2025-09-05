@@ -1,0 +1,41 @@
+/* Common styles */
+.alertRedColor {
+    color: red;
+}
+
+.required-field::after {
+    content: "*";
+    color: red;
+}
+
+.successColor {
+    color: green;
+}
+
+.btn-space {
+    margin-right: 10px;
+}
+
+/* Background styling */
+.bg-img {
+    background: url('/assets/files/211.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+
+    /* Centering with flex */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Card styling */
+.grad {
+    background-image: linear-gradient(to bottom right, rgb(32, 168, 168), rgb(219, 231, 237));
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 20px;
+    border-radius: 10px;
+}

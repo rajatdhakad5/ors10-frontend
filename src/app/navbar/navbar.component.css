@@ -1,0 +1,9 @@
+/* Language Select Styling */
+.lang-select {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    margin: 0 15px;
+    transition: all 0.2s ease;
+}
