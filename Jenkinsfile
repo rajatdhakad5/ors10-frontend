@@ -1,10 +1,10 @@
-pipeline {
+pipeline { 
     agent any
 
     environment {
         NODE_HOME = "C:\\Program Files\\nodejs"
         JAVA_HOME = "C:\\Program Files\\Java\\jdk-11.0.15.1"
-        PATH = "${env.NODE_HOME};${env.JAVA_HOME}\\bin;${env.PATH}"
+        PATH = "\"${env.NODE_HOME}\";${env.JAVA_HOME}\\bin;${env.PATH}"
         
         FRONTEND_REPO = 'https://github.com/rajatdhakad5/ors10-frontend.git'
         FRONTEND_BRANCH = 'main'
@@ -29,10 +29,10 @@ pipeline {
             steps {
                 dir("${FRONTEND_DIR}") {
                     echo "📦 Installing npm packages..."
-                    bat "${NODE_HOME}\\npm install --legacy-peer-deps"
+                    bat "\"${NODE_HOME}\\npm\" install --legacy-peer-deps"
                     
                     echo "🏗 Building Angular project..."
-                    bat "${NODE_HOME}\\npx ng build --configuration production --base-href /ORS/"
+                    bat "\"${NODE_HOME}\\npx\" ng build --configuration production --base-href /ORS/"
                 }
             }
         }
@@ -60,7 +60,7 @@ pipeline {
                         script: """
                             set CATALINA_HOME=${CATALINA_HOME}
                             set JAVA_HOME=${JAVA_HOME}
-                            %CATALINA_HOME%\\bin\\startup.bat
+                            "%CATALINA_HOME%\\bin\\startup.bat"
                         """,
                         returnStatus: true
                     )
