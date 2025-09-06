@@ -56,17 +56,10 @@ pipeline {
 
         stage('Restart Tomcat') {
             steps {
-                echo "♻ Restarting Tomcat server..."
+                echo "♻ Restarting Tomcat service..."
                 script {
-                    bat "\"%CATALINA_HOME%\\bin\\shutdown.bat\" || echo Tomcat not running"
-                    def startStatus = bat(
-                        script: """
-                            set CATALINA_HOME=${env.CATALINA_HOME}
-                            set JAVA_HOME=${env.JAVA_HOME}
-                            "%CATALINA_HOME%\\bin\\startup.bat"
-                        """,
-                        returnStatus: true
-                    )
+                    def stopStatus = bat(returnStatus: true, script: 'net stop Tomcat10')
+                    def startStatus = bat(returnStatus: true, script: 'net start Tomcat10')
 
                     if (startStatus != 0) {
                         error("❌ Tomcat failed to start. Please check manually.")
