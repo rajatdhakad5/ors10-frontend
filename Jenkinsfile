@@ -58,12 +58,12 @@ pipeline {
             steps {
                 echo "♻ Restarting Tomcat server..."
                 script {
-                    bat "%CATALINA_HOME%\\bin\\shutdown.bat || echo Tomcat not running"
+                    bat "\"%CATALINA_HOME%\\bin\\shutdown.bat\" || echo Tomcat not running"
                     def startStatus = bat(
                         script: """
                             set CATALINA_HOME=${env.CATALINA_HOME}
                             set JAVA_HOME=${env.JAVA_HOME}
-                            %CATALINA_HOME%\\bin\\startup.bat
+                            "%CATALINA_HOME%\\bin\\startup.bat"
                         """,
                         returnStatus: true
                     )
