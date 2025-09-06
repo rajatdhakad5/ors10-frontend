@@ -6,7 +6,7 @@ pipeline {
         JAVA_HOME = "C:\\Program Files\\Java\\jdk-11.0.15.1"
         PATH = "${env.NODE_HOME};${env.JAVA_HOME}\\bin;${env.PATH}"
         FRONTEND_DIR = "ors10-frontend"
-        DIST_DIR = "ors10-frontend\\dist\\ors10-frontend"
+        DIST_DIR = "dist\\ors10-frontend"
         TOMCAT_DIR = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\ORS"
         TOMCAT_BIN = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\bin"
         CATALINA_HOME = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1"
