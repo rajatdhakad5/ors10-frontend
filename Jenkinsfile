@@ -2,14 +2,14 @@ pipeline {
     agent any
 
     environment {
-    NODE_HOME = "C:\\Program Files\\nodejs"
-    JAVA_HOME = "C:\\Program Files\\Java\\jdk-11.0.15.1"
-    PATH = "${env.NODE_HOME};${env.JAVA_HOME}\\bin;${env.PATH}"
-    FRONTEND_DIR = "ors10-frontend"
-    DIST_DIR = "ors10-frontend\\dist\\ors10-frontend"
-    TOMCAT_DIR = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\ORS"
-    TOMCAT_BIN = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\bin"
-    CATALINA_HOME = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1"
+        NODE_HOME = "C:\\Program Files\\nodejs"
+        JAVA_HOME = "C:\\Program Files\\Java\\jdk-11.0.15.1"
+        PATH = "${env.NODE_HOME};${env.JAVA_HOME}\\bin;${env.PATH}"
+        FRONTEND_DIR = "ors10-frontend"
+        DIST_DIR = "ors10-frontend\\dist\\ors10-frontend"
+        TOMCAT_DIR = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\ORS"
+        TOMCAT_BIN = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\bin"
+        CATALINA_HOME = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1"
     }
 
     stages {
@@ -25,7 +25,7 @@ pipeline {
             steps {
                 dir("${env.FRONTEND_DIR}") {
                     echo "📦 Installing npm packages..."
-                    bat 'npm install --legacy-peer-deps'
+                    bat "\"${env.NODE_HOME}\\npm.cmd\" install --legacy-peer-deps"
                 }
             }
         }
@@ -34,7 +34,7 @@ pipeline {
             steps {
                 dir("${env.FRONTEND_DIR}") {
                     echo "🏗 Building Angular project..."
-                    bat 'npx ng build --configuration production --base-href /ORS/ --aot=false --build-optimizer=false'
+                    bat "\"${env.NODE_HOME}\\npx.cmd\" ng build --configuration production --base-href /ORS/ --aot=false --build-optimizer=false"
                 }
             }
         }
@@ -54,10 +54,11 @@ pipeline {
             }
         }
 
-        stage('Start Tomcat') {
+        stage('Restart Tomcat') {
             steps {
-                echo "🚀 Starting Tomcat server..."
+                echo "♻ Restarting Tomcat server..."
                 script {
+                    bat "%CATALINA_HOME%\\bin\\shutdown.bat || echo Tomcat not running"
                     def startStatus = bat(
                         script: """
                             set CATALINA_HOME=${env.CATALINA_HOME}
