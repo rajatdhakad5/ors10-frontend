@@ -2,14 +2,14 @@ pipeline {
     agent any
 
     environment {
-    NODE_HOME = "C:\\Program Files\\nodejs"
-    JAVA_HOME = "C:\\Program Files\\Java\\jdk-11.0.15.1"
-    PATH = "${env.NODE_HOME};${env.JAVA_HOME}\\bin;${env.PATH}"
-    FRONTEND_DIR = "ors10-frontend"
-    DIST_DIR = "ors10-frontend\\dist\\p10-ui"
-    TOMCAT_DIR = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\ORS"
-    TOMCAT_BIN = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\bin"
-    CATALINA_HOME = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1"
+        NODE_HOME = "C:\\Program Files\\nodejs"
+        JAVA_HOME = "C:\\Program Files\\Java\\jdk-11.0.15.1"
+        PATH = "${env.NODE_HOME};${env.JAVA_HOME}\\bin;${env.PATH}"
+        FRONTEND_DIR = "ors10-frontend"
+        DIST_DIR = "ors10-frontend\\dist\\p10-ui"
+        TOMCAT_DIR = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\ORS"
+        TOMCAT_BIN = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\bin"
+        CATALINA_HOME = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1"
     }
 
     stages {
@@ -42,8 +42,12 @@ pipeline {
         stage('Clean Tomcat ORS Folder') {
             steps {
                 echo "🧹 Cleaning existing deployed files from Tomcat ORS folder..."
-                bat "rmdir /S /Q \"${env.TOMCAT_DIR}\" || echo Folder not found, skipping..."
-                bat "mkdir \"${env.TOMCAT_DIR}\""
+                bat """
+                    if exist "${env.TOMCAT_DIR}" (
+                        rmdir /S /Q "${env.TOMCAT_DIR}"
+                    )
+                    mkdir "${env.TOMCAT_DIR}"
+                """
             }
         }
 
