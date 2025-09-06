@@ -2,85 +2,77 @@ pipeline {
     agent any
 
     environment {
-        // Paths
-        WORKSPACE_DIR = "${env.WORKSPACE}"
-        DIST_DIR = "${WORKSPACE_DIR}\\ors10-frontend\\dist\\ors10-frontend"
-        TOMCAT_DIR = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\ORS"
+    NODE_HOME = "C:\\Program Files\\nodejs"
+    JAVA_HOME = "C:\\Program Files\\Java\\jdk-11.0.15.1"
+    PATH = "${env.NODE_HOME};${env.JAVA_HOME}\\bin;${env.PATH}"
+    FRONTEND_DIR = "ors10-frontend"
+    DIST_DIR = "ors10-frontend\\dist\\ors10-frontend"
+    TOMCAT_DIR = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\ORS"
+    TOMCAT_BIN = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\bin"
+    CATALINA_HOME = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1"
     }
 
     stages {
-
         stage('Checkout') {
             steps {
-                echo "🔑 Checking out frontend code..."
+                echo "🔄 Checking out frontend code..."
                 deleteDir()
-                git branch: 'main',
-                    url: 'https://github.com/rajatdhakad5/ors10-frontend.git'
+                git branch: 'main', url: 'https://github.com/rajatdhakad5/ors10-frontend.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                dir("ors10-frontend") {
+                dir("${env.FRONTEND_DIR}") {
                     echo "📦 Installing npm packages..."
-                    bat "npm install --legacy-peer-deps"
+                    bat 'npm install --legacy-peer-deps'
                 }
             }
         }
 
         stage('Build') {
             steps {
-                dir("ors10-frontend") {
-                    echo "🏗️ Building Angular project..."
-                    bat "npx ng build --configuration production --base-href /ORS/ --aot=false --build-optimizer=false"
+                dir("${env.FRONTEND_DIR}") {
+                    echo "🏗 Building Angular project..."
+                    bat 'npx ng build --configuration production --base-href /ORS/ --aot=false --build-optimizer=false'
                 }
-            }
-        }
-
-        stage('Debug Paths') {
-            steps {
-                echo "🖊 Checking important paths..."
-                bat "echo Jenkins Workspace = %WORKSPACE%"
-                bat "echo DIST_DIR = %DIST_DIR%"
-                bat "echo TOMCAT_DIR = %TOMCAT_DIR%"
-            }
-        }
-
-        stage('List Dist Folder') {
-            steps {
-                dir("ors10-frontend/dist/ors10-frontend") {
-                    echo "📂 Listing build output..."
-                    bat "dir"
-                }
-            }
-        }
-
-        stage('Check Tomcat Folder Access') {
-            steps {
-                echo "📂 Checking Tomcat webapps folder access..."
-                bat "dir \"%TOMCAT_DIR%\""
             }
         }
 
         stage('Clean Tomcat ORS Folder') {
             steps {
                 echo "🧹 Cleaning existing deployed files from Tomcat ORS folder..."
-                bat "rmdir /S /Q \"%TOMCAT_DIR%\" || echo Folder not found, skipping..."
-                bat "mkdir \"%TOMCAT_DIR%\""
+                bat "rmdir /S /Q \"${env.TOMCAT_DIR}\" || echo Folder not found, skipping..."
+                bat "mkdir \"${env.TOMCAT_DIR}\""
             }
         }
 
         stage('Deploy') {
             steps {
                 echo "🚀 Deploying build to Tomcat..."
-                bat "echo --- Before Copy ---"
-                bat "dir \"%TOMCAT_DIR%\""
+                bat "xcopy \"${env.DIST_DIR}\" \"${env.TOMCAT_DIR}\" /E /H /Y /I"
+            }
+        }
 
-                bat "echo --- Start Copy ---"
-                bat "xcopy \"%DIST_DIR%\\*\" \"%TOMCAT_DIR%\\\" /E /H /Y /I"
+        stage('Start Tomcat') {
+            steps {
+                echo "🚀 Starting Tomcat server..."
+                script {
+                    def startStatus = bat(
+                        script: """
+                            set CATALINA_HOME=${env.CATALINA_HOME}
+                            set JAVA_HOME=${env.JAVA_HOME}
+                            %CATALINA_HOME%\\bin\\startup.bat
+                        """,
+                        returnStatus: true
+                    )
 
-                bat "echo --- After Copy ---"
-                bat "dir \"%TOMCAT_DIR%\""
+                    if (startStatus != 0) {
+                        error("❌ Tomcat failed to start. Please check manually.")
+                    } else {
+                        echo "✅ Tomcat started successfully."
+                    }
+                }
             }
         }
     }
